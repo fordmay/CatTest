@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cat</title>
+</head>
+<body>
+
+<img id="cat" src="img/cat.png" style="max-width:100px;max-height:100px; position: absolute;
+    left: 20px; top: 200px;">
+
+<script>
+
+    const result = confirm('Що будемо робити? \n ok - стрибати \n cancel - ходити');
+    if (result) {
+        const answer = prompt('Як високо? \nВведіть від 10 до 50');
+        if (checkAnswer(+answer)) {
+            action(200, +answer, true);
+        }
+
+    } else {
+        const answer = prompt('Як далеко? \nВведіть від 10 до 50');
+        if (checkAnswer(+answer)) {
+            action(20, +answer, false);
+        }
+    }
+
+    function checkAnswer(number) {
+        if (!isNaN(number) && 10 <= number && number <= 50) {
+            return true;
+        } else if (!isNaN(number) && 10 > number) {
+            alert("Це надто мало для мене!");
+        } else if (!isNaN(number) && number > 50) {
+            alert("Це надто багато для мене!");
+        } else {
+            alert(number + " - це не число!");
+        }
+        return false;
+    }
+
+    function action(start, step, direction) {
+        const cat = document.getElementById("cat");
+        const maxX = start + (step * 4);
+        let x = start;
+        let move = true;
+
+        let timer = setInterval(() => {
+            if (direction) {
+                cat.style.top = start - (x - start) + 'px';
+            } else {
+                cat.style.left = x + 'px';
+            }
+
+            if (move) {
+                x++
+            } else {
+                x--
+            }
+            if (x > maxX && move) {
+                move = false;
+            } else if (x < start) {
+                clearInterval(timer);
+                alert("Я виконав задачу " + step + " раз");
+            }
+
+        }, 20)
+    }
+
+</script>
+</body>
+</html>
