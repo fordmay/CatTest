@@ -5,6 +5,7 @@
     <title>Cat</title>
 </head>
 <body>
+<h2 id="message"></h2>
 
 <img id="cat" src="img/cat.png" style="max-width:100px;max-height:100px; position: absolute;
     left: 20px; top: 200px;">
@@ -41,14 +42,14 @@ position: absolute; top: 300px; left: 20px;"></div>
         return false;
     }
 
-    function action(start, step, direction) {
+    function action(start, step, directionY) {
         const cat = document.getElementById("cat");
         const maxX = start + (step * 4);
         let x = start;
         let move = true;
 
         let timer = setInterval(() => {
-            if (direction) {
+            if (directionY) {
                 cat.style.top = start - (x - start) + 'px';
             } else {
                 cat.style.left = x + 'px';
@@ -59,11 +60,22 @@ position: absolute; top: 300px; left: 20px;"></div>
             } else {
                 x--
             }
+
             if (x > maxX && move) {
+                if (directionY) {
+                    cat.style.transform = 'rotate(60deg)';
+                } else {
+                    cat.style.transform = 'rotateY(180deg)';
+                }
                 move = false;
             } else if (x < start) {
+                if (directionY) {
+                    cat.style.transform = 'rotate(0deg)';
+                } else {
+                    cat.style.transform = 'rotateY(0deg)';
+                }
+                document.querySelector('#message').innerHTML = "Я виконав задачу " + step + " раз";
                 clearInterval(timer);
-                alert("Я виконав задачу " + step + " раз");
             }
 
         }, 20)
