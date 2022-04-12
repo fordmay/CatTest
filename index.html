@@ -44,31 +44,31 @@ position: absolute; top: 300px; left: 20px;"></div>
 
     function action(start, step, directionY) {
         const cat = document.getElementById("cat");
-        const maxX = start + (step * 4);
-        let x = start;
+        const max = start + (step * 4);
+        let i = start;
         let move = true;
 
         let timer = setInterval(() => {
             if (directionY) {
-                cat.style.top = start - (x - start) + 'px';
+                cat.style.top = start - (i - start) + 'px';
             } else {
-                cat.style.left = x + 'px';
+                cat.style.left = i + 'px';
             }
 
             if (move) {
-                x++
+                i++
             } else {
-                x--
+                i--
             }
 
-            if (x > maxX && move) {
+            if (i > max && move) {
                 if (directionY) {
                     cat.style.transform = 'rotate(60deg)';
                 } else {
                     cat.style.transform = 'rotateY(180deg)';
                 }
                 move = false;
-            } else if (x < start) {
+            } else if (i < start) {
                 if (directionY) {
                     cat.style.transform = 'rotate(0deg)';
                 } else {
