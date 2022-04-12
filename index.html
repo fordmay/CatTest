@@ -7,7 +7,10 @@
 <body>
 
 <img id="cat" src="img/cat.png" style="max-width:100px;max-height:100px; position: absolute;
-    left: 20px; top: 200px;">
+    left: 20px; top: 200px;" alt="">
+
+<div style="width: 280px; height: 5px; background: black;
+position: absolute; top: 300px; left: 20px;"></div>
 
 <script>
 
@@ -33,7 +36,7 @@
         } else if (!isNaN(number) && number > 50) {
             alert("Це надто багато для мене!");
         } else {
-            alert(number + " - це не число!");
+            alert("Це не число!");
         }
         return false;
     }
