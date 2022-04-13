@@ -19,13 +19,12 @@ position: absolute; top: 300px; left: 20px;"></div>
     if (result) {
         const answer = prompt('Як високо? \nВведіть від 10 до 50');
         if (checkAnswer(+answer)) {
-            action(200, +answer, true);
+            walk(catJump, 200, +answer);
         }
-
     } else {
         const answer = prompt('Як далеко? \nВведіть від 10 до 50');
         if (checkAnswer(+answer)) {
-            action(20, +answer, false);
+            walk(catWalk, 20, +answer);
         }
     }
 
@@ -42,43 +41,50 @@ position: absolute; top: 300px; left: 20px;"></div>
         return false;
     }
 
-    function action(start, step, directionY) {
-        const cat = document.getElementById("cat");
-        const max = start + (step * 4);
+    function walk(func, start, step) {
         let i = start;
-        let move = true;
-
+        let move = 1;
+        // loops with intervals 20 milliseconds
         let timer = setInterval(() => {
-            if (directionY) {
-                cat.style.top = start - (i - start) + 'px';
-            } else {
-                cat.style.left = i + 'px';
-            }
 
-            if (move) {
-                i++
-            } else {
-                i--
-            }
+            // function catJump or catWalk
+            func(i, start, start + (step * 4))
 
-            if (i > max && move) {
-                if (directionY) {
-                    cat.style.transform = 'rotate(60deg)';
-                } else {
-                    cat.style.transform = 'rotateY(180deg)';
-                }
-                move = false;
+            // moves from start to max and back with a step 1
+            i = i + move;
+            if (i > start + (step * 4)) {
+                move = -1;
             } else if (i < start) {
-                if (directionY) {
-                    cat.style.transform = 'rotate(0deg)';
-                } else {
-                    cat.style.transform = 'rotateY(0deg)';
-                }
                 document.querySelector('#message').innerHTML = "Я виконав задачу " + step + " раз";
                 clearInterval(timer);
             }
-
         }, 20)
+    }
+
+    function catJump(i, start, max) {
+        const cat = document.getElementById("cat");
+        // move img
+        cat.style.top = start - (i - start) + 'px';
+        // if 'i' reaches 'max' or 'start' changes 'rotation'
+        if (i >= max) {
+            cat.style.transform = 'rotate(60deg)';
+        } else if (i <= start) {
+            cat.style.transform = 'rotate(0deg)';
+        }
+        return i
+    }
+
+    function catWalk(i, start, max) {
+        const cat = document.getElementById("cat");
+        // move img
+        cat.style.left = i + 'px';
+        // if 'i' reaches 'max' or 'start' changes 'rotateY'
+        if (i >= max) {
+            cat.style.transform = 'rotateY(180deg)';
+        } else if (i <= start) {
+            cat.style.transform = 'rotateY(0deg)';
+        }
+        return i
     }
 
 </script>
