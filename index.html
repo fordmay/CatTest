@@ -2,91 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="src/styles.css">
     <title>Cat</title>
 </head>
 <body>
-<h2 id="message"></h2>
-
-<img id="cat" src="img/cat.png" style="max-width:100px;max-height:100px; position: absolute;
-    left: 20px; top: 200px;">
-
-<div style="width: 280px; height: 5px; background: black;
-position: absolute; top: 300px; left: 20px;"></div>
-
-<script>
-
-    const result = confirm('Що будемо робити? \n ok - стрибати \n cancel - ходити');
-    if (result) {
-        const answer = prompt('Як високо? \nВведіть від 10 до 50');
-        if (checkAnswer(+answer)) {
-            walk(catJump, 200, +answer);
-        }
-    } else {
-        const answer = prompt('Як далеко? \nВведіть від 10 до 50');
-        if (checkAnswer(+answer)) {
-            walk(catWalk, 20, +answer);
-        }
-    }
-
-    function checkAnswer(number) {
-        if (!isNaN(number) && 10 <= number && number <= 50) {
-            return true;
-        } else if (!isNaN(number) && 10 > number) {
-            alert("Це надто мало для мене!");
-        } else if (!isNaN(number) && number > 50) {
-            alert("Це надто багато для мене!");
-        } else {
-            alert("Це не число!");
-        }
-        return false;
-    }
-
-    function walk(func, start, step) {
-        let i = start;
-        let move = 1;
-        // loops with intervals 20 milliseconds
-        let timer = setInterval(() => {
-
-            // function catJump or catWalk
-            func(i, start, start + (step * 4))
-
-            // moves from start to max and back with a step 1
-            i = i + move;
-            if (i > start + (step * 4)) {
-                move = -1;
-            } else if (i < start) {
-                document.querySelector('#message').innerHTML = "Я виконав задачу " + step + " раз";
-                clearInterval(timer);
-            }
-        }, 20)
-    }
-
-    function catJump(i, start, max) {
-        const cat = document.getElementById("cat");
-        // move img
-        cat.style.top = start - (i - start) + 'px';
-        // if 'i' reaches 'max' or 'start' changes 'rotation'
-        if (i >= max) {
-            cat.style.transform = 'rotate(60deg)';
-        } else if (i <= start) {
-            cat.style.transform = 'rotate(0deg)';
-        }
-        return i
-    }
-
-    function catWalk(i, start, max) {
-        const cat = document.getElementById("cat");
-        // move img
-        cat.style.left = i + 'px';
-        // if 'i' reaches 'max' or 'start' changes 'rotateY'
-        if (i >= max) {
-            cat.style.transform = 'rotateY(180deg)';
-        } else if (i <= start) {
-            cat.style.transform = 'rotateY(0deg)';
-        }
-        return i
-    }
-
-</script>
+<h1 id="message"></h1>
+<img id="cat" src="img/cat.png" alt="no img">
+<div id="line">
+    <h2>Click on cat</h2>
+</div>
+<script src="src/index.js"></script>
 </body>
 </html>
