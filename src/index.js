@@ -1,90 +1,119 @@
-document.querySelector('#cat').onclick = start;
+function activateCat(id) {
+    const cat = document.querySelector(id)
+    cat.jumpCount = 0;
+    cat.walkCount = 0;
 
-let jumpCount = 0;
-let walkCount = 0;
+    cat.activity = 0;
+    cat.distance = 0;
 
-function getJumpCount(){
-    ++jumpCount;
-    return `стрибати ${jumpCount}`;
-}
-function getWalkCount(){
-    ++walkCount;
-    return `ходити ${walkCount}`;
-}
+    cat.maxPositionLeft = 0;
+    cat.maxPositionTop = 0;
+    cat.startPositionLeft = cat.offsetLeft;
+    cat.startPositionTop = cat.offsetTop;
 
-function start() {
-    document.querySelector('#message').innerHTML = ""
-    const result = window.confirm("Що будемо робити? \n ok - стрибати \n cancel - ходити");
-    if (result) {
-        const answer = prompt("Як високо? \nВведіть від 10 до 50");
-        if (checkAnswer(+answer)) {
-            move(catJump, 200, +answer, getJumpCount());
+    cat.checkNumber = function (number) {
+        if (isNaN(number)) {
+            alert("Це не число!");
+            return false;
         }
-    } else {
-        const answer = prompt("Як далеко? \nВведіть від 10 до 50");
-        if (checkAnswer(+answer)) {
-            move(catWalk, 20, +answer, getWalkCount());
+        if (10 > number) {
+            alert("Це надто мало для мене!");
+            return false;
+        }
+        if (number > 50) {
+            alert("Це надто багато для мене!");
+            return false;
+        }
+        return true
+    }
+    cat.checkActivity = function (activityName) {
+        const normalActivityName = activityName.toLowerCase()
+        if (normalActivityName === 'гуляти') {
+            return 0;
+        }
+        if (normalActivityName === 'стрибати') {
+            return 1;
+        }
+        return false;
+    }
+    cat.getActivity = function () {
+        while (true) {
+            const result = prompt("Що будемо робити? \n стрибати або гуляти");
+            if (cat.checkActivity(result) !== false) {
+                cat.activity = cat.checkActivity(result);
+                break;
+            }
         }
     }
-}
-
-function checkAnswer(number) {
-    if (!isNaN(number) && 10 <= number && number <= 50) {
-        return true;
-    } else if (!isNaN(number) && 10 > number) {
-        alert("Це надто мало для мене!");
-    } else if (!isNaN(number) && number > 50) {
-        alert("Це надто багато для мене!");
-    } else {
-        alert("Це не число!");
-    }
-    return false;
-}
-
-function move(functionAction, start, step, count) {
-    let i = start;
-    let move = 1;
-
-    // loops with intervals 20 milliseconds
-    let timer = setInterval(() => {
-
-        // function catJump or catWalk
-        functionAction(i, start, start + (step * 4))
-
-        // moves from start to max and back with a step 1
-        i = i + move;
-        if (i > start + (step * 4)) {
-            move = -1;
-        } else if (i < start) {
-            move = 1;
-            clearInterval(timer);
-            document.querySelector('#message').innerHTML = `Я виконав задачу ${count} раз(и).`;
+    cat.getDistance = function () {
+        while (true) {
+            const result = parseInt(prompt(`Як ${cat.activity === 0 ? 'далеко': 'високо'}? \nВведіть від 10 до 50`));
+            if (cat.checkNumber(result)) {
+                cat.distance = result;
+                cat.maxPositionLeft = cat.startPositionLeft + cat.distance;
+                cat.maxPositionTop = cat.startPositionTop + cat.distance;
+                break;
+            }
         }
-    }, 20)
+    }
+    cat.catWalk = function (i) {
+        cat.style.left = i + 'px';
+        if (i >= cat.maxPositionLeft) {
+            cat.style.transform = 'rotateY(180deg)';
+        } else if (i <= cat.startPositionLeft) {
+            cat.style.transform = 'rotateY(0deg)';
+        }
+        return i;
+    }
+    cat.catJump = function (i) {
+        cat.style.top = cat.startPositionTop - (i - cat.startPositionTop) + 'px';
+        if (i >= cat.maxPositionTop) {
+            cat.style.transform = 'rotate(60deg)';
+        } else if (i <= cat.startPositionTop) {
+            cat.style.transform = 'rotate(0deg)';
+        }
+        return i
+    }
+    cat.moveJump = function () {
+        let move = 1;
+        let i = cat.startPositionTop;
+        let timer = setInterval(() => {
+            cat.catJump(i);
+            i = i + move;
+            if (i > cat.maxPositionTop) {
+                move = -1;
+            } else if (i < cat.startPositionTop) {
+                clearInterval(timer);
+                cat.jumpCount++;
+                document.querySelector('#message').innerHTML = `Я виконав задачу ${cat.jumpCount} раз(и).`;
+            }
+        }, 20)
+    }
+    cat.moveWalk = function () {
+        let move = 1;
+        let i = cat.startPositionLeft;
+        let timer = setInterval(() => {
+            cat.catWalk(i);
+            i = i + move;
+            if (i > cat.maxPositionLeft) {
+                move = -1;
+            } else if (i < cat.startPositionLeft) {
+                clearInterval(timer);
+                cat.walkCount++;
+                document.querySelector('#message').innerHTML = `Я виконав задачу ${cat.walkCount} раз(и).`;
+            }
+        }, 20)
+    }
+    return cat;
 }
 
-function catJump(i, start, max) {
-    const cat = document.getElementById("cat");
-    // move img
-    cat.style.top = start - (i - start) + 'px';
-    // if 'i' reaches 'max' or 'start' changes 'rotation'
-    if (i >= max) {
-        cat.style.transform = 'rotate(60deg)';
-    } else if (i <= start) {
-        cat.style.transform = 'rotate(0deg)';
+cat1 = activateCat('#cat');
+cat1.onclick = () => {
+    cat1.getActivity();
+    cat1.getDistance();
+    if (cat1.activity === 0) {
+        cat1.moveWalk();
+    } else if (cat1.activity === 1) {
+        cat1.moveJump();
     }
-    return i
-}
-
-function catWalk(i, start, max) {
-    const cat = document.getElementById('cat');
-    // move img
-    cat.style.left = i + 'px';
-    // if 'i' reaches 'max' or 'start' changes 'rotateY'
-    if (i >= max) {
-        cat.style.transform = 'rotateY(180deg)';
-    } else if (i <= start) {
-        cat.style.transform = 'rotateY(0deg)';
-    }
-    return i
 }
