@@ -74,33 +74,18 @@ function activateCat(id) {
         }
         return i
     }
-    cat.moveJump = function () {
+    cat.move = function () {
         let move = 1;
-        let i = cat.startPositionTop;
+        let i = cat.activity === 0 ? cat.startPositionLeft : cat.startPositionTop;
         let timer = setInterval(() => {
-            cat.catJump(i);
+            cat.activity === 0 ? cat.catWalk(i): cat.catJump(i);
             i = i + move;
-            if (i > cat.maxPositionTop) {
+            if (i > (cat.activity === 0 ? cat.maxPositionLeft : cat.maxPositionTop)) {
                 move = -1;
-            } else if (i < cat.startPositionTop) {
+            } else if (i < (cat.activity === 0 ? cat.startPositionLeft : cat.startPositionTop)) {
                 clearInterval(timer);
-                cat.jumpCount++;
-                document.querySelector('#message').innerHTML = `Я виконав задачу ${cat.jumpCount} раз(и).`;
-            }
-        }, 20)
-    }
-    cat.moveWalk = function () {
-        let move = 1;
-        let i = cat.startPositionLeft;
-        let timer = setInterval(() => {
-            cat.catWalk(i);
-            i = i + move;
-            if (i > cat.maxPositionLeft) {
-                move = -1;
-            } else if (i < cat.startPositionLeft) {
-                clearInterval(timer);
-                cat.walkCount++;
-                document.querySelector('#message').innerHTML = `Я виконав задачу ${cat.walkCount} раз(и).`;
+                document.querySelector('#message').innerHTML =
+                    `Я виконав задачу ${cat.activity === 0 ? ++cat.walkCount : ++cat.jumpCount} раз(и).`;
             }
         }, 20)
     }
@@ -111,9 +96,5 @@ cat1 = activateCat('#cat');
 cat1.onclick = () => {
     cat1.getActivity();
     cat1.getDistance();
-    if (cat1.activity === 0) {
-        cat1.moveWalk();
-    } else if (cat1.activity === 1) {
-        cat1.moveJump();
-    }
+    cat1.move();
 }
