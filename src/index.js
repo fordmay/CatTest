@@ -4,7 +4,6 @@ function activateCat(id) {
     cat.walkCount = 0;
 
     cat.activity = 0;
-    cat.distance = 0;
 
     cat.maxPositionLeft = 0;
     cat.maxPositionTop = 0;
@@ -49,9 +48,12 @@ function activateCat(id) {
         while (true) {
             const result = parseInt(prompt(`Як ${cat.activity === 0 ? 'далеко': 'високо'}? \nВведіть від 10 до 50`));
             if (cat.checkNumber(result)) {
-                cat.distance = result;
-                cat.maxPositionLeft = cat.startPositionLeft + cat.distance;
-                cat.maxPositionTop = cat.startPositionTop + cat.distance;
+                if (cat.activity === 0) {
+                    cat.maxPositionLeft = cat.startPositionLeft + result;
+                }
+                if (cat.activity === 1) {
+                    cat.maxPositionTop = cat.startPositionTop + result;
+                }
                 break;
             }
         }
